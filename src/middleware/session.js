@@ -1,8 +1,5 @@
-import handleHttpErrors from '../utils/handleErrors';
-import {tokenVerify} from '../utils/handleJwt';
+const handleHttpErrors = require('../utils/handleErrors');
 const {tokenVerify} = require('../utils/Jwt');
-
-
 
 
 const authMiddleware = async (req, res, next) =>{
@@ -12,6 +9,7 @@ const authMiddleware = async (req, res, next) =>{
         }
 
         let tokenAuth = req.headers.authorization;
+        console.log(tokenAuth);
         tokenAuth = tokenAuth?.split(' ').pop() || 'no token';
 
         const dataToken = await tokenVerify(tokenAuth);
@@ -22,17 +20,17 @@ const authMiddleware = async (req, res, next) =>{
         
         console.log(dataToken);
 
+        next();
     }catch(error){
-        // if (error.name === 'TokenExpiredError') {
-        //     return handleHttpErrors(res, 'SESSION_EXPIRED', 401);
-        // } else if (error.name === 'JsonWebTokenError'){
-        //     return handleHttpErrors(res, 'NOT_PAYLOAD_DATA', 403);
-        // }else{
-        //     console.log(error);
-        //     return handleHttpErrors(res, 'ERROR_AUTH', 403);
-        // }
-        console.log(error);
+        if (error.name === 'TokenExpiredError') {
+            return handleHttpErrors(res, 'SESSION_EXPIRED', 401);
+        } else if (error.name === 'JsonWebTokenError'){
+            return handleHttpErrors(res, 'NOT_PAYLOAD_DATA', 403);
+        }else{
+            console.log(error);
+            return handleHttpErrors(res, 'ERROR_AUTH', 403);
+        }
     }
 }
 
-export {authMiddleware};
+module.exports =  {authMiddleware};
