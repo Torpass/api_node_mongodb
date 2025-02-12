@@ -42,16 +42,12 @@ class UserDTO {
     }
 
     static login(props) {
-        const {email, password} = props;
+        const {name, password} = props;
         const errors = [];
 
-        // Validar el email
-        if(!email){
-            errors.push('Email name is required');
-        }
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (typeof email !== 'string' || !emailRegex.test(email)) {
-            errors.push('El email debe ser un email válido.');
+        // Validar el nombre
+        if(!name){
+            errors.push('User name is required');
         }
 
         // Validar la contraseña
@@ -66,7 +62,7 @@ class UserDTO {
             return errors;
         }
 
-        return [undefined, new UserDTO(undefined, email, password)]
+        return [undefined, new UserDTO(name, undefined, password)]
     }
 }
 

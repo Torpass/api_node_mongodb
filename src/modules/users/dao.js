@@ -51,7 +51,7 @@ class UserDao {
         try {
             const errors = [];
             // Verificar si ya existe un usuario con el email proporcionado
-            const userExists = await UserModel.findOne({ email: userData.email });
+            const userExists = await UserModel.findOne({ name: userData.name });
             if (!userExists) {
                 errors.push('User not found');
                 return errors;
