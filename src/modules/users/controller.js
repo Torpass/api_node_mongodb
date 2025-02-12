@@ -19,7 +19,7 @@ class UserController{
 
         response.status(200).send({
             message: 'User created',
-            User: userData
+            data: userData
         });
     }
 

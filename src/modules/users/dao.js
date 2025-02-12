@@ -28,10 +28,10 @@ class UserDao {
             
             const data = await UserModel.create(userData);
 
-            return [undefined, {User:{
-                data,
+            return [undefined, {
+                User: data,
                 token: jwtToken
-            }}]
+            }]
 
         } catch (error) {
             throw error;
