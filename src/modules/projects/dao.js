@@ -96,6 +96,34 @@ class ProjectDAO {
       throw new Error("No se pudieron eliminar los proyectos.");
     }
   }
+
+  static async searchProjects(data){
+    const { query, page = 1, limit = 10 } = data;
+    
+    const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); 
+
+    const searchQuery = {
+      name: { 
+        $regex: escapedQuery, 
+        $options: "i" // Búsqueda case-insensitive
+      }
+    };
+
+    const projects = await ProjectModel.find(searchQuery)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ 
+        name: 1,
+        createdAt: -1 
+      })
+      .select("name creator numbers");
+
+    const total = await ProjectModel.countDocuments(searchQuery);
+
+    return { projects, total, limit, page };
+
+  }
+
   
 }
 

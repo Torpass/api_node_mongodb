@@ -58,6 +58,33 @@ class ProjectDto {
 
         return [undefined, ids];
     }
+
+    static searchProjects(data){
+        console.log(data);    
+        let { query, page = 1, limit = 10 } = data;
+        page = parseInt(page);
+        limit = parseInt(limit);
+
+        if (!query) {
+            return res.status(400).json({ error: "El parámetro 'query' es obligatorio." });
+        }
+
+        if (typeof query !== "string") {
+            return res.status(400).json({ error: "El parámetro 'query' debe ser un string." });
+        }
+
+
+
+        if (isNaN(page) || isNaN(limit)) {
+            return res.status(400).json({ error: "Los parámetros 'page' y 'limit' deben ser números." });
+        }
+
+        if (page < 1 || limit < 1) {
+            return res.status(400).json({ error: "Los parámetros 'page' y 'limit' deben ser números positivos." });
+        }
+
+        return [undefined, { query, page, limit }];
+    }
 }
 
 module.exports = ProjectDto;

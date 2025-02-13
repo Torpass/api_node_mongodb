@@ -12,6 +12,7 @@ class LineRouter{
         router.delete('/delete', authMiddleware, LineController.deleteLines);
         router.put('/updateLineField', authMiddleware, LineController.updateLineField);
         return router;
+        
     }
 }
 5

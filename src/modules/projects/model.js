@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-const {numberFieldsSchema,percentFieldsSchema} = require('../../schema/numberFiledsSchema');
+const { numberFieldsSchema, percentFieldsSchema } = require('../../schema/numberFiledsSchema');
 
-// Esquema de Proyecto
 const projectSchema = new mongoose.Schema(
   {
     name: {
@@ -15,10 +14,19 @@ const projectSchema = new mongoose.Schema(
       required: true
     },
     numbers: {
-      sumPrice: numberFieldsSchema,
-      sumBudget: numberFieldsSchema,
-      budgetUtility: percentFieldsSchema,
-      budgetMargin: percentFieldsSchema
+      type: {
+        sumPrice: { type: numberFieldsSchema, default: () => ({}) },
+        sumBudget: { type: numberFieldsSchema, default: () => ({}) },
+        budgetUtility: { type: percentFieldsSchema, default: () => ({}) },
+        budgetMargin: { type: percentFieldsSchema, default: () => ({}) }
+      },
+      _id: false,
+      default: () => ({
+        sumPrice: {},
+        sumBudget: {},
+        budgetUtility: {},
+        budgetMargin: {}
+      })
     }
   },
   {
@@ -26,4 +34,5 @@ const projectSchema = new mongoose.Schema(
   }
 );
 
+projectSchema.index({ name: 1 });
 module.exports = mongoose.model("projects", projectSchema);

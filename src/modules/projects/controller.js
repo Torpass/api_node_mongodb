@@ -46,6 +46,28 @@ class ProjectController {
             res.status(500).json({ message: "Internal server error" });
         }
     }
+
+
+    static searchProjects = async (req, res) => {
+        try {
+            const [errorsDto, searchParams] = ProjectDto.searchProjects(req.query);
+            if (errorsDto) return res.status(400).json({ Errors: errorsDto });
+
+
+
+            const {projects, total, limit, page} = await ProjectDao.searchProjects(searchParams);
+
+            res.status(200).json({
+                total,
+                page,
+                totalPages: Math.ceil(total / limit),
+                results: projects
+            });
+        } catch (error) {
+            console.error("Error in ProjectController.searchProjects:", error);
+            res.status(500).json({ message: "Internal server error" });
+        }
+    }
 }
 
 module.exports = ProjectController;

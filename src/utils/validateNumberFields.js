@@ -1,15 +1,13 @@
 const ALLOWED_FIELDS = ["sumPrice", "sumBudget", "budgetUtility", "budgetMargin"];
+const REQUIRED_FIELDS = ["sumPrice", "sumBudget"]; // Nuevo array para campos obligatorios
 const ALLOWED_PROPERTIES = new Set(["value", "lastValue", "number", "lastNumber"]);
 const FIELD_TYPES = {
-  sumPrice: "number",       
-  sumBudget: "number",       
-  budgetUtility: "percent",  
-  budgetMargin: "percent",   
+  sumPrice: "number",
+  sumBudget: "number",
+  budgetUtility: "percent",
+  budgetMargin: "percent",
 };
 
-/**
- * Obtiene el patrón de validación y mensaje de error según el tipo del campo.
- */
 const getStringValidationConfig = (fieldName) => {
   const type = FIELD_TYPES[fieldName];
   const config = {
@@ -21,15 +19,9 @@ const getStringValidationConfig = (fieldName) => {
   return config;
 };
 
-/**
- * Valida la estructura y las propiedades de un campo individual.
- * @param {string} fieldName - Nombre del campo (ej. "sumPrice").
- * @param {object} fieldData - Objeto con las propiedades del campo.
- * @returns {string[]} Array de mensajes de error.
- */
 const validateField = (fieldName, fieldData) => {
   const errors = [];
-
+  
   // Validar que sea un objeto no nulo
   if (typeof fieldData !== "object" || fieldData === null) {
     errors.push(`El campo '${fieldName}' debe ser un objeto`);
@@ -43,12 +35,14 @@ const validateField = (fieldName, fieldData) => {
     }
   });
 
-  // Validar propiedades obligatorias
-  if (typeof fieldData.value === "undefined") {
-    errors.push(`El campo '${fieldName}.value' es obligatorio.`);
-  }
-  if (typeof fieldData.number === "undefined") {
-    errors.push(`El campo '${fieldName}.number' es obligatorio.`);
+  // Validar propiedades obligatorias solo para campos requeridos
+  if (REQUIRED_FIELDS.includes(fieldName)) {
+    if (typeof fieldData.value === "undefined") {
+      errors.push(`El campo '${fieldName}.value' es obligatorio.`);
+    }
+    if (typeof fieldData.number === "undefined") {
+      errors.push(`El campo '${fieldName}.number' es obligatorio.`);
+    }
   }
 
   // Configuración de validación para campos de tipo string
@@ -75,11 +69,6 @@ const validateField = (fieldName, fieldData) => {
   return errors;
 };
 
-/**
- * Valida el objeto 'numbers' según la especificación requerida.
- * @param {object} numbers - Objeto que contiene los campos a validar.
- * @returns {true|string[]} true si la validación es exitosa, o un array de errores.
- */
 const validateNumberFields = (numbers) => {
   const errors = [];
 
@@ -89,11 +78,19 @@ const validateNumberFields = (numbers) => {
     return errors;
   }
 
-  // Validar que cada uno de los ALLOWED_FIELDS esté presente
-  ALLOWED_FIELDS.forEach((fieldName) => {
+  // Validar solo los campos requeridos
+  REQUIRED_FIELDS.forEach((fieldName) => {
     if (!Object.prototype.hasOwnProperty.call(numbers, fieldName)) {
       errors.push(`El campo '${fieldName}' es obligatorio en 'numbers'`);
     } else {
+      errors.push(...validateField(fieldName, numbers[fieldName]));
+    }
+  });
+
+  // Validar campos opcionales si están presentes
+  ALLOWED_FIELDS.forEach((fieldName) => {
+    if (!REQUIRED_FIELDS.includes(fieldName) && 
+        Object.prototype.hasOwnProperty.call(numbers, fieldName)) {
       errors.push(...validateField(fieldName, numbers[fieldName]));
     }
   });
