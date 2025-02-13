@@ -1,4 +1,5 @@
 const handleHttpErrors = require('../utils/handleErrors');
+const UserModel = require('../modules/users/model');
 const {tokenVerify} = require('../utils/Jwt');
 
 
@@ -9,7 +10,6 @@ const authMiddleware = async (req, res, next) =>{
         }
 
         let tokenAuth = req.headers.authorization;
-        console.log(tokenAuth);
         tokenAuth = tokenAuth?.split(' ').pop() || 'no token';
 
         const dataToken = await tokenVerify(tokenAuth);
@@ -17,8 +17,9 @@ const authMiddleware = async (req, res, next) =>{
         if(!dataToken){
             handleHttpErrors(res, 'NOT_PAYLOAD_DATA', 401);
         }
-        
-        console.log(dataToken);
+
+        const user = await UserModel.findOne(where = {email: dataToken.email});
+        req.user = user;
 
         next();
     }catch(error){
