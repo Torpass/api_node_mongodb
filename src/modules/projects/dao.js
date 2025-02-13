@@ -1,4 +1,5 @@
 const ProjectModel = require("./model");
+const MovementModel = require("../movements/model");
 
 class ProjectDAO {
   /**
@@ -56,8 +57,7 @@ class ProjectDAO {
   static async deleteProjects(projectIds, userId) {
     try {
       // Verificar qué proyectos existen en la base de datos
-      const existingProjects = await ProjectModel.find(
-        { 
+      const existingProjects = await ProjectModel.find({ 
           _id: { $in: projectIds },
           creator: userId 
         }, 
@@ -71,6 +71,9 @@ class ProjectDAO {
       if (missingIds.length > 0) {
         return { error: `Los siguientes IDs no existen en tu usuario: ${missingIds.join(", ")}` };
       }
+
+      // Eliminar los movimientos asociados a los proyectos
+      await MovementModel.deleteMany({ project: { $in: existingProjectIds } });
   
       // Proceder con la eliminación solo si todos los IDs existen y que pertenezcan al usuario
       const result = await ProjectModel.deleteMany({ 

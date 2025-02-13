@@ -38,10 +38,11 @@ class ProjectController {
 
     static deleteMovements = async (req, res) => {
         try {
+            const userId = req.user._id;
             const [errorsDto, projectIds]= await MovementDto.deleteMovements(req.body);
             if (errorsDto) return res.status(400).json({ Errors: errorsDto });
 
-            const result = await MovementDao.deleteMovements(projectIds);
+            const result = await MovementDao.deleteMovements(projectIds, userId);
             res.status(200).json(result);
 
 
