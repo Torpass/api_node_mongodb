@@ -2,12 +2,12 @@ const LineModel = require("./model");
 const MovementModel = require("../movements/model");
 const ProjectModel = require("../projects/model");
 
-// Convierte un número a un formato monetario, por ejemplo: 1234.56 -> "$ 1,234.56"
+// Convierte un número a un formato monetario
 const formatCurrency = (num) => {
   return `$ ${Number(num).toFixed(2)}`;
 };
 
-// Convierte un número a formato porcentual, por ejemplo: 20 -> "20%"
+// Convierte un número a formato porcentual
 const formatPercentage = (num) => {
   return `${Number(num).toFixed(0)}%`;
 };
