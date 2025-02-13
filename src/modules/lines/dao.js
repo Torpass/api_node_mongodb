@@ -1,6 +1,11 @@
 const LineModel = require("./model");
 const MovementModel = require("../movements/model");
-const ProjectModel = require("../projects/model");
+const mongoose = require("mongoose");
+const {formatCurrency,
+      formatPercentage,
+      recalcLineNumbers,
+      recalcMovementNumbers,
+      recalcProjectNumbers} = require("./utils");
 
 class LineDAO {
   /**
@@ -79,6 +84,51 @@ class LineDAO {
       throw new Error("No se pudieron eliminar las lineas.");
     }
   }
+
+  static async updateLineField (data){
+    const {lineId, field, newNumber} = data; 
+
+    const errors = [];
+    
+  
+    // Iniciar una transacción
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+
+      //Obtener la línea
+      const line = await LineModel.findById(lineId).session(session);
+      if (!line){
+        errors.push("Línea no encontrada.");
+        return errors;
+      }
+  
+      // Actualizar el campo de la línea
+      line.numbers[field].number = newNumber;
+      line.numbers[field].value = formatCurrency(newNumber);
+  
+      // Recalcular los valores derivados en la línea
+      recalcLineNumbers(line);
+      await line.save({ session });
+  
+      // Actualizar el movimiento asociado (sumando los totales de sus líneas)
+      const movementId = line.movement;
+      const movement = await recalcMovementNumbers(movementId, session);
+  
+      // Actualizar el proyecto asociado (sumando los totales de sus movimientos)
+      const projectId = movement.project;
+      const project = await recalcProjectNumbers(projectId, session);
+  
+      await session.commitTransaction();
+      session.endSession();
+  
+      return { line, movement, project };
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
+  };
   
 }
 

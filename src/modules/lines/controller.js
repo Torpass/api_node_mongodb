@@ -51,6 +51,19 @@ class LineController {
             res.status(500).json({ message: "Internal server error" });
         }
     }
+
+    static updateLineField = async (req, res) => {
+        try {
+            const [errorsDto, data] = LineDto.updateLineField(req.body);
+            if (errorsDto) return res.status(400).json({ Errors: errorsDto });
+
+            const result = await LineDao.updateLineField(data);
+            res.status(200).json(result);
+        } catch (error) {
+            console.error("Error in LineController.updateLineField:", error);
+            res.status(500).json({ message: "Internal server error" });
+        }
+    }
 }
 
 module.exports = LineController;

@@ -92,6 +92,55 @@ class LinesDto {
 
         return [undefined, movementId];
     }
+
+
+    static updateLineField(data) {
+        const errors = [];
+        const { lineId, field, newNumber } = data;
+    
+        // Validar lineId
+        if (!lineId || typeof lineId !== "string") {
+          errors.push("El campo lineId es obligatorio y debe ser un string.");
+          return errors;
+        }
+        if (!mongoose.Types.ObjectId.isValid(lineId)) {
+          errors.push(`El ID '${lineId}' no es un ObjectId válido.`);
+          return errors;
+        }
+    
+        // Validar field
+        if (!field || typeof field !== "string") {
+          errors.push("El campo field es obligatorio y debe ser un string.");
+          return errors;
+        }
+        if (!['sumPrice', 'sumBudget'].includes(field)) {
+          errors.push("Campo inválido. Debe ser 'sumPrice' o 'sumBudget'.");
+          return errors;
+        }
+    
+        // Validar newNumber
+        if (newNumber === undefined || newNumber === null) {
+          errors.push("El campo newNumber es obligatorio.");
+          return errors;
+        }
+        if (typeof newNumber !== "number") {
+          errors.push("El campo newNumber debe ser un número.");
+          return errors;
+        }
+        // Opcional: validar que el número sea mayor o igual a 0
+        if (newNumber < 0) {
+          errors.push("El campo newNumber debe ser mayor o igual a 0.");
+          return errors;
+        }
+    
+        const validatedData = {
+          lineId,
+          field,
+          newNumber,
+        };
+    
+        return [undefined, validatedData];
+      }
 }
 
 module.exports = LinesDto;

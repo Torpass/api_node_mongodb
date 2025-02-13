@@ -10,6 +10,7 @@ class LineRouter{
         router.post('/create', authMiddleware, LineController.register);
         router.get('/getLinesByMovement', authMiddleware, LineController.getLineByMovement);
         router.delete('/delete', authMiddleware, LineController.deleteLines);
+        router.put('/updateLineField', authMiddleware, LineController.updateLineField);
         return router;
     }
 }
