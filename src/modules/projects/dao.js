@@ -1,5 +1,6 @@
 const ProjectModel = require("./model");
 const MovementModel = require("../movements/model");
+const LineModel = require("../lines/model");
 
 class ProjectDAO {
   /**
@@ -70,6 +71,14 @@ class ProjectDAO {
   
       if (missingIds.length > 0) {
         return { error: `Los siguientes IDs no existen en tu usuario: ${missingIds.join(", ")}` };
+      }
+
+      const movements = await MovementModel.find({ project: { $in: existingProjectIds } }, { _id: 1 });
+      const movementIds = movements.map(mov => mov._id.toString());
+
+      // Eliminar todas las líneas asociadas a esos movimientos
+        if (movementIds.length > 0) {
+          await LineModel.deleteMany({ movement: { $in: movementIds } });
       }
 
       // Eliminar los movimientos asociados a los proyectos
