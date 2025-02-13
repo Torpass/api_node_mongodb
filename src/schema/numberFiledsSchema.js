@@ -6,6 +6,8 @@ const numberFieldsSchema = new mongoose.Schema({
   lastValue:  { type: String, default: "$0" },
   number:     {type: Number, default: 0},
   lastNumber: { type: Number, default: 0 }
+},{
+  _id: false
 });
 
 const percentFieldsSchema = new mongoose.Schema({
@@ -13,6 +15,8 @@ const percentFieldsSchema = new mongoose.Schema({
   lastValue:  { type: String, default: "0%" },
   number:     {type: Number, default: 0},
   lastNumber: { type: Number, default: 0 }
+},{
+  _id: false
 })
 
 module.exports = {

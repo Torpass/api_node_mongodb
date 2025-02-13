@@ -1,5 +1,5 @@
 const validateNumberField = require("../../utils/validateNumberFields");
-
+const mongoose = require("mongoose");
 class ProjectDto {
     /**
      * Valida y estructura los datos para la creación de un proyecto.
@@ -28,8 +28,6 @@ class ProjectDto {
 
         const validationResult = validateNumberField(numbers);        
 
-        console.log("validationResult", validationResult);
-
         if (validationResult !== true){
             errors.push(...validationResult);
             return errors;
@@ -43,6 +41,26 @@ class ProjectDto {
         };
 
         return [undefined, validatedData];
+    }
+
+    static deleteProjects(data) {
+        const { ids } = data;
+        const errors = [];
+        
+        if (!Array.isArray(ids) || ids.length === 0) {
+            errors.push("Se requiere una lista de IDs para eliminar los proyectos.");
+            return errors;
+        }
+
+
+        const invalidId = ids.find(id => !mongoose.Types.ObjectId.isValid(id));
+        if (invalidId) {
+          errors.push(`El ID '${invalidId}' no es un ObjectId válido.`);
+          return errors;
+        }
+        
+
+        return [undefined, ids];
     }
 }
 

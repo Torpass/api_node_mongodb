@@ -55,13 +55,28 @@ class ProjectDAO {
    */
   static async deleteProjects(projectIds) {
     try {
+      // Verificar qué proyectos existen en la base de datos
+      const existingProjects = await ProjectModel.find({ _id: { $in: projectIds } }, { _id: 1 });
+      const existingProjectIds = existingProjects.map(proj => proj._id.toString());
+  
+      // Identificar los IDs que no existen en la BD
+      const missingIds = projectIds.filter(id => !existingProjectIds.includes(id));
+  
+      if (missingIds.length > 0) {
+        return { error: `Los siguientes IDs no existen: ${missingIds.join(", ")}` };
+      }
+  
+      // Proceder con la eliminación solo si todos los IDs existen
       const result = await ProjectModel.deleteMany({ _id: { $in: projectIds } });
-      return result;
+  
+      return { message: "Proyectos eliminados correctamente", deletedCount: result.deletedCount };
     } catch (error) {
       console.error("Error al eliminar proyectos:", error);
       throw new Error("No se pudieron eliminar los proyectos.");
     }
   }
+  
 }
+
 
 module.exports = ProjectDAO;

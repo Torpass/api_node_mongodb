@@ -9,6 +9,7 @@ class ProjectRouter{
 
         router.post('/create', authMiddleware, ProjectController.register);
         router.get('/getProjectsByUser', authMiddleware, ProjectController.getProjectsByUser);
+        router.delete('/delete', authMiddleware, ProjectController.deleteProjects);
         return router;
     }
 }
