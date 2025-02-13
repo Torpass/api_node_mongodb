@@ -19,6 +19,8 @@ class UserDao {
             const passwordHash = await encryptPassword(userData.password);
             userData.password = passwordHash;
 
+            
+
             // Crear el token
             const jwtToken = await tokenSign(userData);
             
@@ -67,9 +69,13 @@ class UserDao {
             // Crear el token
             const jwtToken = await tokenSign(userExists);
 
+            const userWithoutPassword = userExists.toObject();
+            delete userWithoutPassword.password;
+
+
 
             return [undefined, {
-                User: userExists,
+                User:   userWithoutPassword,
                 token: jwtToken
             }];
 

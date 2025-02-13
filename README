@@ -1,0 +1,43 @@
+# API Mongo Test
+
+Este proyecto es una API que utiliza MongoDB como base de datos. A continuación, se detallan los pasos para inicializar esta API en un entorno local.
+
+## Requisitos
+
+- Node.js (v14 o superior)
+- MongoDB (v4.4 o superior)
+
+## Instalación
+
+1. Clona el repositorio en tu máquina local:
+
+    ```bash
+    git clone https://github.com/tu-usuario/api_mongo_test.git
+    ```
+
+2. Navega al directorio del proyecto:
+
+    ```bash
+    cd api_mongo_test
+    ```
+
+3. Instala las dependencias del proyecto:
+
+    ```bash
+    npm install
+    ```
+
+## Configuración
+
+1. Crea un archivo `.env` en la raíz del proyecto y copia las variables de entorno del archivo .env.template
+
+
+## Ejecución
+
+1. Inicia el servidor de desarrollo:
+
+    ```bash
+    npm run dev
+    ```
+
+2. La API estará disponible en `http://localhost:3000`.
