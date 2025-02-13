@@ -9,20 +9,18 @@ class ProjectDto {
     static register(data) {
         const errors = [];
         const { name, numbers } = data;
-        const { sumPrice, sumBudget, budgetUtility, budgetMargin } = numbers;
 
-        // Validaciones básicas
         if (!name || typeof name !== "string") {
             errors.push("El nombre del proyecto es obligatorio y debe ser un string.");
+            return errors;
         }
         if(name.length < 3 || name.length > 256) {
             errors.push("El nombre del proyecto debe tener al menos 3 caracteres y un máximo de 256.");
             return errors;
         }
 
-        // Validar estructura de `numbers`
-        if (!numbers || typeof numbers !== "object"){
-            errors.push("El campo 'numbers' es obligatorio y debe ser un objeto.");
+        if (!numbers){
+            errors.push("El campo 'numbers' es obligatorio");
             return errors;
         }
 
@@ -33,8 +31,6 @@ class ProjectDto {
             return errors;
         }
 
-
-        // Datos validados
         const validatedData = {
             name,
             numbers

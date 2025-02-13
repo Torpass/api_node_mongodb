@@ -1,4 +1,3 @@
-// Definiciones de constantes globales
 const ALLOWED_FIELDS = ["sumPrice", "sumBudget", "budgetUtility", "budgetMargin"];
 const ALLOWED_PROPERTIES = new Set(["value", "lastValue", "number", "lastNumber"]);
 const FIELD_TYPES = {
@@ -90,9 +89,11 @@ const validateNumberFields = (numbers) => {
     return errors;
   }
 
-  // Validar cada campo permitido
+  // Validar que cada uno de los ALLOWED_FIELDS esté presente
   ALLOWED_FIELDS.forEach((fieldName) => {
-    if (numbers && Object.prototype.hasOwnProperty.call(numbers, fieldName)) {
+    if (!Object.prototype.hasOwnProperty.call(numbers, fieldName)) {
+      errors.push(`El campo '${fieldName}' es obligatorio en 'numbers'`);
+    } else {
       errors.push(...validateField(fieldName, numbers[fieldName]));
     }
   });
