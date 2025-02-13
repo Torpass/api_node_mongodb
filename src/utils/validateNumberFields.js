@@ -1,5 +1,5 @@
 const ALLOWED_FIELDS = ["sumPrice", "sumBudget", "budgetUtility", "budgetMargin"];
-const REQUIRED_FIELDS = ["sumPrice", "sumBudget"]; // Nuevo array para campos obligatorios
+const REQUIRED_FIELDS = ["sumPrice", "sumBudget"];
 const ALLOWED_PROPERTIES = new Set(["value", "lastValue", "number", "lastNumber"]);
 const FIELD_TYPES = {
   sumPrice: "number",
